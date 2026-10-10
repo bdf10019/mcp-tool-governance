@@ -1,0 +1,92 @@
+{
+  "artifact": "MCP 工具整合與授權治理",
+  "checks": {
+    "backend": {
+      "failed": 0,
+      "passed": 41
+    },
+    "desktop_and_390px_mobile": "passed",
+    "e2e": {
+      "failed": 0,
+      "passed": 7
+    },
+    "frontend_component": {
+      "failed": 0,
+      "passed": 7
+    },
+    "privacy_allowlist_scan": "passed",
+    "production_build": "passed"
+  },
+  "core_version": "0.5.0",
+  "data_notice": "所有業務資料皆為原創合成資料；本摘要是有日期的本機歷史證據，不是即時產品監控。",
+  "evidence_kind": "dated_local_synthetic_evidence",
+  "governance": {
+    "account_lifecycle": "passed_local",
+    "admin_bypass_blocked": true,
+    "lost_response_recovered_without_duplicate": true,
+    "parallel_exactly_one_order": true,
+    "profile_version_workflow": "passed_local",
+    "self_review_blocked": true,
+    "single_and_dual_approval": true
+  },
+  "live_status": "not_checked",
+  "migration": {
+    "applied": 4,
+    "checksum_drift": false,
+    "pending": 0,
+    "schema": "p2d3-1"
+  },
+  "milestones": [
+    {
+      "id": "P2-B",
+      "status": "passed_local",
+      "version": "0.1.0"
+    },
+    {
+      "id": "P2-C",
+      "status": "passed_local",
+      "version": "0.2.0"
+    },
+    {
+      "id": "P2-D-1",
+      "status": "passed",
+      "version": "0.3.0"
+    },
+    {
+      "id": "P2-D-2",
+      "status": "passed",
+      "version": "0.4.0"
+    },
+    {
+      "id": "P2-D-3",
+      "status": "passed",
+      "version": "0.5.0"
+    }
+  ],
+  "not_claimed": [
+    "真實企業資料或帳號",
+    "外部工單整合",
+    "即時設備控制",
+    "雲端或正式生產部署",
+    "跨機災難復原",
+    "不可變外部稽核儲存"
+  ],
+  "public_payload_sha256": "a24bff13cc06fe62fd17438cc10316653d3bce2a96633016f6728081e6a45ad4",
+  "restore_authority": {
+    "active_approvals": 0,
+    "auth_contexts": 0,
+    "auto_replay": 0,
+    "mcp_calls": 0,
+    "sessions": 0
+  },
+  "schema_version": "p2e-public-evidence-v1",
+  "showcase_version": "1.0.0",
+  "summary": {
+    "approval_gated_write_tools": 1,
+    "migration_steps": 4,
+    "profiles": 2,
+    "read_tools": 3,
+    "restore_zero_authority_checks": 5
+  },
+  "verified_on": "2026-09-27"
+}

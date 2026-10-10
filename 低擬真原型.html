@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MCP 工具工作台｜P2-A 低擬真原型</title>
+  <style>
+    :root { color-scheme: light; --ink:#17201d; --muted:#5c6a65; --line:#cad3cf; --paper:#f6f4ec; --panel:#fff; --accent:#176b5b; --warn:#9a5c00; --bad:#9d2f2f; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.5 system-ui,"Noto Sans TC",sans-serif; color:var(--ink); background:var(--paper); }
+    button, select, input, textarea { font:inherit; }
+    button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline:3px solid #efb84d; outline-offset:2px; }
+    .notice { padding:10px 16px; color:#fff; background:#263a34; text-align:center; }
+    .shell { min-height:calc(100vh - 44px); display:grid; grid-template-columns:240px 1fr; }
+    nav { padding:18px; border-right:1px solid var(--line); background:#eef1ed; }
+    nav h1 { font-size:18px; margin:0 0 4px; }
+    nav p { color:var(--muted); margin:0 0 18px; }
+    nav button { display:block; width:100%; margin:5px 0; padding:9px 10px; text-align:left; border:1px solid transparent; border-radius:7px; background:transparent; cursor:pointer; }
+    nav button[aria-current="page"] { background:#fff; border-color:var(--line); color:var(--accent); font-weight:700; }
+    main { min-width:0; }
+    header { position:sticky; top:0; z-index:2; display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 20px; border-bottom:1px solid var(--line); background:rgba(246,244,236,.96); }
+    header strong { margin-right:auto; }
+    .badge { display:inline-flex; align-items:center; min-height:28px; padding:3px 9px; border:1px solid var(--line); border-radius:999px; background:#fff; }
+    .badge.demo { color:var(--warn); border-color:#d6a85f; }
+    .content { padding:22px; max-width:1180px; margin:auto; }
+    .page[hidden] { display:none; }
+    h2 { margin-top:0; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .cards { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .card { padding:15px; border:1px solid var(--line); border-radius:10px; background:var(--panel); }
+    .card h3 { margin:0 0 6px; font-size:16px; }
+    .card p { color:var(--muted); }
+    .read { border-top:5px solid var(--accent); }
+    .write { border-top:5px solid var(--warn); }
+    label { display:block; margin:9px 0 4px; font-weight:650; }
+    input, select, textarea { width:100%; padding:9px; border:1px solid #98a7a1; border-radius:6px; background:#fff; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+    .actions button { padding:9px 13px; border:1px solid #82918b; border-radius:7px; background:#fff; cursor:pointer; }
+    .actions .primary { color:#fff; border-color:var(--accent); background:var(--accent); }
+    .actions button:disabled { opacity:.45; cursor:not-allowed; }
+    .result { margin-top:14px; padding:12px; border-left:4px solid var(--accent); background:#eef8f5; }
+    .warning { border-left-color:var(--warn); background:#fff5e6; }
+    .blocked { border-left-color:var(--bad); background:#fff0f0; }
+    table { width:100%; border-collapse:collapse; background:#fff; }
+    th, td { padding:9px; border:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:#eef1ed; }
+    .timeline { display:grid; gap:8px; }
+    .step { padding:10px; border:1px solid var(--line); border-radius:7px; background:#fff; }
+    .ok::before { content:"✓ "; color:var(--accent); font-weight:800; }
+    .pending::before { content:"○ "; color:var(--warn); font-weight:800; }
+    code { overflow-wrap:anywhere; }
+    @media (max-width:900px) { .cards { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:700px) {
+      .shell { display:block; }
+      nav { position:sticky; top:0; z-index:3; padding:8px; border:0; border-bottom:1px solid var(--line); overflow:auto; white-space:nowrap; }
+      nav h1, nav p { display:none; }
+      nav button { display:inline-block; width:auto; margin:2px; }
+      header { position:static; }
+      header strong { flex-basis:100%; }
+      .content { padding:15px; }
+      .grid, .cards { grid-template-columns:1fr; }
+      table, thead, tbody, tr, th, td { display:block; }
+      thead { position:absolute; left:-9999px; }
+      tr { margin-bottom:10px; border:1px solid var(--line); }
+      td { border:0; border-bottom:1px solid var(--line); }
+      td::before { content:attr(data-label) ": "; font-weight:700; }
+    }
+  </style>
+</head>
+<body>
+  <div class="notice"><strong>P2-A 規劃原型</strong>｜無 MCP、無登入、無資料庫、無真實寫入；所有互動只改目前頁面狀態。</div>
+  <div class="shell">
+    <nav aria-label="原型頁面">
+      <h1>企業工具工作台</h1><p>低擬真導覽</p>
+      <button data-page="catalog" aria-current="page">工具目錄</button>
+      <button data-page="workbench">參數與查詢</button>
+      <button data-page="proposal">提案與核准</button>
+      <button data-page="execution">執行與 Trace</button>
+      <button data-page="governance">污染與治理</button>
+    </nav>
+    <main>
+      <header>
+        <strong id="page-title">工具目錄</strong>
+        <label for="profile" style="margin:0">Profile</label>
+        <select id="profile" style="width:auto"><option value="service">維修服務</option><option value="asset">設備管理</option></select>
+        <span class="badge">operator-01</span><span class="badge">scope：3 台</span><span class="badge demo">development／模擬</span>
+      </header>
+      <div class="content">
+        <section class="page" id="catalog">
+          <h2>四個工具，三讀一寫</h2>
+          <p>工具 discovery、Schema、版本與可用性在真實產品會來自 MCP；此處只是規劃卡片。</p>
+          <div class="cards">
+            <article class="card read"><h3>設備狀態</h3><span class="badge">唯讀</span><p><code>get_equipment_status</code></p><button>查看 Schema</button></article>
+            <article class="card read"><h3>維修歷史</h3><span class="badge">唯讀</span><p><code>list_maintenance_history</code></p><button>查看 Schema</button></article>
+            <article class="card read"><h3>零件庫存與相容性</h3><span class="badge">唯讀</span><p><code>check_parts_stock</code></p><button>查看 Schema</button></article>
+            <article class="card write"><h3>建立維修工單</h3><span class="badge demo">唯一寫入</span><p><code>create_maintenance_order</code></p><button disabled title="需先提案與核准">需核准</button></article>
+          </div>
+          <div class="result warning">MCP Server 離線時：保留工具說明，但停用呼叫並提供重測／啟動指引；不顯示假成功。</div>
+        </section>
+
+        <section class="page" id="workbench" hidden>
+          <h2>Schema 表單與權限來源</h2>
+          <div class="grid">
+            <div class="card">
+              <label for="tool">工具</label><select id="tool"><option>設備狀態查詢</option><option>維修歷史查詢</option><option>零件庫存與相容性</option></select>
+              <label for="equipment">設備 ID</label><select id="equipment"><option>EQ-PUMP-001</option><option>EQ-FAN-002</option><option value="blocked">EQ-CHILLER-004（目前 scope 外）</option></select>
+              <div class="actions"><button id="validate">驗證參數</button><button class="primary" id="run-query">執行查詢</button></div>
+              <div id="query-result" class="result" hidden></div>
+            </div>
+            <aside class="card">
+              <h3>後端判定</h3>
+              <ul><li>角色：operator</li><li>Profile scope：<span id="scope-label">SERVICE-A</span></li><li>工具：唯讀允許</li><li>資料版本：seed-v1</li></ul>
+              <p>前端不會把 <code>role</code> 或 <code>approved=true</code> 傳成工具參數。</p>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" id="proposal" hidden>
+          <h2>提案與獨立核准</h2>
+          <div class="grid">
+            <div class="card">
+              <label for="summary">問題摘要</label><textarea id="summary">幫浦持續震動，需安排本機合成維修工單。</textarea>
+              <label for="priority">優先序</label><select id="priority"><option>normal</option><option>high</option></select>
+              <div id="asset-extra" hidden><label for="window">維護時段</label><input id="window" value="2026-09-25 09:00-11:00"><label for="risk">風險說明</label><textarea id="risk">維護期間設備不可用。</textarea></div>
+              <div class="actions"><button>儲存草稿</button><button class="primary" id="submit-proposal">送審</button></div>
+            </div>
+            <div class="card">
+              <h3>核准進度</h3>
+              <div class="timeline" id="approval-timeline"><div class="step pending">尚未送審</div></div>
+              <div class="actions"><button id="approve">模擬 reviewer 核准</button><button>退回</button></div>
+              <p class="result warning">此處只是 UI 重播；不建立 approval record。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" id="execution" hidden>
+          <h2>執行狀態與 Trace</h2>
+          <div class="grid">
+            <div class="card"><h3>執行前重驗</h3><ul><li class="ok">帳號仍啟用</li><li class="ok">設備仍在 scope</li><li class="ok">參數／資料／政策版本吻合</li><li class="pending" id="approval-check">核准尚未完成</li></ul><div class="actions"><button class="primary" id="execute" disabled>建立工單</button><button id="unknown">模擬結果不明</button></div><div id="execution-result" class="result warning" hidden></div></div>
+            <div class="card"><h3>Trace 節點</h3><div class="timeline"><div class="step">HTTP/session</div><div class="step">Policy/auth context</div><div class="step">MCP stdio/tools.call</div><div class="step">Business transaction</div><div class="step">Result／recovery</div></div></div>
+          </div>
+        </section>
+
+        <section class="page" id="governance" hidden>
+          <h2>資料污染與隔離</h2>
+          <div class="cards">
+            <article class="card"><h3>local_product</h3><p>真實本機工單；需核准。</p><span class="badge">measured_local</span></article>
+            <article class="card"><h3>automated_test</h3><p>獨立 temp DB；不可進產品證據。</p><span class="badge demo">test</span></article>
+            <article class="card"><h3>fixture_demo</h3><p>瀏覽器狀態；不載入產品 API。</p><span class="badge demo">simulated</span></article>
+            <article class="card"><h3>restore_isolation</h3><p>新 UUID DB；全部 imported record 唯讀。</p><span class="badge">restored_readonly</span></article>
+          </div>
+          <h3>污染驗收預覽</h3>
+          <table>
+            <thead><tr><th>情境</th><th>預期</th><th>UI</th></tr></thead>
+            <tbody>
+              <tr><td data-label="情境">Fixture 嘗試建單</td><td data-label="預期">後端 fail-fast，零工單</td><td data-label="UI">阻擋＋環境原因</td></tr>
+              <tr><td data-label="情境">Profile 切換後使用舊 cursor</td><td data-label="預期">scope/hash 不符</td><td data-label="UI">重新查詢</td></tr>
+              <tr><td data-label="情境">核准後資料版本變更</td><td data-label="預期">approval invalidated</td><td data-label="UI">版本 diff＋重新送審</td></tr>
+              <tr><td data-label="情境">隔離還原含舊核准</td><td data-label="預期">restored_readonly，0 active approval</td><td data-label="UI">不可執行</td></tr>
+            </tbody>
+          </table>
+          <div class="actions"><button id="quarantine">模擬污染偵測</button><button>查看備份預覽</button></div>
+          <div id="quarantine-result" class="result blocked" hidden>已模擬凍結相關提案與匯出；真實產品會新增 quarantine ledger，不原地改寫歷史。</div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    const titles={catalog:'工具目錄',workbench:'參數與查詢',proposal:'提案與核准',execution:'執行與 Trace',governance:'污染與治理'};
+    document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{
+      document.querySelectorAll('.page').forEach(p=>p.hidden=p.id!==b.dataset.page);
+      document.querySelectorAll('nav button').forEach(x=>x.removeAttribute('aria-current'));
+      b.setAttribute('aria-current','page'); document.querySelector('#page-title').textContent=titles[b.dataset.page];
+    }));
+    const profile=document.querySelector('#profile');
+    profile.addEventListener('change',()=>{ const asset=profile.value==='asset'; document.querySelector('#asset-extra').hidden=!asset; document.querySelector('#scope-label').textContent=asset?'ASSET-B':'SERVICE-A'; resetApproval(); });
+    document.querySelector('#run-query').addEventListener('click',()=>{ const box=document.querySelector('#query-result'); box.hidden=false; if(document.querySelector('#equipment').value==='blocked'){box.className='result blocked';box.textContent='NOT_FOUND_OR_FORBIDDEN：此設備不在目前 actor 與 Profile scope 交集。';}else{box.className='result';box.textContent='規劃示例：degraded｜data_version seed-v1｜來源 synthetic_seed。未呼叫 MCP。';}});
+    let approvals=0;
+    function resetApproval(){ approvals=0; document.querySelector('#approval-timeline').innerHTML='<div class="step pending">尚未送審</div>'; syncExecution(); }
+    document.querySelector('#submit-proposal').addEventListener('click',()=>{approvals=0;document.querySelector('#approval-timeline').innerHTML='<div class="step ok">提案 v1 已送審（模擬）</div><div class="step pending">等待 reviewer</div>';syncExecution();});
+    document.querySelector('#approve').addEventListener('click',()=>{const need=profile.value==='asset'?2:1; if(approvals<need) approvals++; let html='<div class="step ok">提案 v1 已送審（模擬）</div>';for(let i=1;i<=need;i++)html+=`<div class="step ${i<=approvals?'ok':'pending'}">Reviewer ${i} ${i<=approvals?'已核准':'待核准'}</div>`;document.querySelector('#approval-timeline').innerHTML=html;syncExecution();});
+    function syncExecution(){const need=profile.value==='asset'?2:1,done=approvals>=need;const line=document.querySelector('#approval-check');line.className=done?'ok':'pending';line.textContent=done?'核准完整（模擬）':'核准尚未完成';document.querySelector('#execute').disabled=!done;}
+    document.querySelector('#execute').addEventListener('click',()=>{const box=document.querySelector('#execution-result');box.hidden=false;box.className='result';box.textContent='規劃示例：同一 idempotency key 回 MO-DEMO-000001；未寫入資料庫。';});
+    document.querySelector('#unknown').addEventListener('click',()=>{const box=document.querySelector('#execution-result');box.hidden=false;box.className='result warning';box.textContent='outcome_unknown：先用原 idempotency key 查 execution／工單，不產生新鍵盲目重送。';});
+    document.querySelector('#quarantine').addEventListener('click',()=>document.querySelector('#quarantine-result').hidden=false);
+  </script>
+</body>
+</html>
